@@ -1,8 +1,14 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {API_URL} from '../env';
 import {Exam} from './exam.model';
+
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type':'application/json'
+    })
+};
 
 @Injectable()
 export class ExamsApiService {
@@ -19,5 +25,9 @@ export class ExamsApiService {
     return this.http
       .get<Exam[]>(`${API_URL}/exams`)
 
+  }
+
+  postExams(exam: Exam): Observable<Exam> {
+    return this.http.post<Exam>(`${API_URL}`, exam, httpOptions)
   }
 }

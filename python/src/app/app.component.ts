@@ -13,6 +13,10 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
   examListSubs: Subscription;
   examList: Exam[];
+  // test = '
+  //   'title': "TypeScript Advanced Exam",
+  //   'description': "Tricky questions about TypeScript."
+  // ';
 
   constructor(private ExamsApi: ExamsApiService) {
 
@@ -23,6 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
     .getExams()
     .subscribe(
       res => {
+        console.log(res);
         this.examList = res;
       },
       console.error
@@ -32,4 +37,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.examListSubs.unsubscribe();
   }
+
+  // postex() {
+  //   this.ExamsApi.postExams(this.exam)
+  // }
 }
