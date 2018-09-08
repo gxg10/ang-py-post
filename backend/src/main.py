@@ -2,6 +2,7 @@ from .entities.entity import Session, engine, Base
 from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, OrdersSchema
 from flask_cors import CORS
 from flask import Flask, jsonify, request
+import simplejson as json
 
 # generate database schema
 Base.metadata.create_all(engine)
@@ -9,9 +10,9 @@ Base.metadata.create_all(engine)
 # start session
 session = Session()
 
-orderss = session.query(Orders).all()
-for o in orderss:
-    print(f'({o.id}) {o.simbol}')
+# orderss = session.query(Orders).all()
+# for o in orderss:
+#     print(f'({o.id}) {o.simbol}')
 
 # check for existing data
 # exams = session.query(Exam).all()
@@ -60,6 +61,18 @@ def get_customers():
 
     session.close()
     return jsonify(customers.data)
+
+@app.route('/orders')
+def get_orders():
+    session = Session()
+    orders_objects = session.query(Orders).all()
+
+    schema = OrdersSchema(many=True)
+    orders = schema.dump(orders_objects)
+
+    session.close()
+
+    return json.dumps(orders.data)
 
 @app.route('/exams', methods=['POST'])
 def add_exam():

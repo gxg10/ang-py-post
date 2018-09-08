@@ -4,6 +4,8 @@ import {ExamsApiService} from './exam/exam-api.service';
 import {Exam} from './exam/exam.model';
 import { Customer } from './customers/customer';
 import { CustomerService } from './customers/customers.service';
+import { OrderService } from './orders/orders.service';
+import { Orders } from './orders/orders.model';
 
 
 @Component({
@@ -17,13 +19,15 @@ export class AppComponent implements OnInit, OnDestroy {
   custListSubs: Subscription;
   examList: Exam[];
   custList: Customer[];
+  orderList: Orders[];
   // test = '
   //   'title': "TypeScript Advanced Exam",
   //   'description': "Tricky questions about TypeScript."
   // ';
 
   constructor(private ExamsApi: ExamsApiService,
-    private CustApi: CustomerService) {
+    private CustApi: CustomerService,
+    private OrdersApi: OrderService) {
 
   }
 
@@ -49,10 +53,20 @@ export class AppComponent implements OnInit, OnDestroy {
     this.CustApi.getCustomers()
       .subscribe(
         res => {
-          console.log(res)
+          console.log(res);
           this.custList = res;
         }
       );
+  }
+
+  getOr() {
+    this.OrdersApi.getOrders()
+    .subscribe(
+      res => {
+        console.log(res);
+        this.orderList = res;
+      }
+    )
   }
 
   

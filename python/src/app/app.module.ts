@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import {ExamsApiService} from './exam/exam-api.service';
 import { CustomerService } from './customers/customers.service';
+import { OrderService } from './orders/orders.service';
 
 
 
@@ -17,7 +18,8 @@ import { CustomerService } from './customers/customers.service';
     HttpClientModule
   ],
   providers: [ExamsApiService,
-  CustomerService],
+  CustomerService,
+OrderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

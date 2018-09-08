@@ -9,6 +9,7 @@ marshmallow = "*"
 flask-cors = "*"
 sqlalchemy = "*"
 "psycopg2-binary" = "*"
+simplejson = "*"
 
 [dev-packages]
 
