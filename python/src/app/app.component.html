@@ -4,3 +4,13 @@
     {{exam.title}}
   </li>
 </ul>
+
+<div>
+  <h3>customers</h3>
+  <button (click)="getC()">push for customers</button>
+  <ul>
+    <li *ngFor="let c of custList">
+      {{c.firstname}} {{c.lastname}} {{c.age}} {{c.createdAt}} {{c.updatedAt}}
+    </li>
+  </ul>
+</div>

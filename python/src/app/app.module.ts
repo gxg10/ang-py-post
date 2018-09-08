@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import {ExamsApiService} from './exam/exam-api.service';
+import { CustomerService } from './customers/customers.service';
 
 
 
@@ -15,7 +16,8 @@ import {ExamsApiService} from './exam/exam-api.service';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [ExamsApiService],
+  providers: [ExamsApiService,
+  CustomerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

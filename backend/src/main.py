@@ -1,5 +1,5 @@
 from .entities.entity import Session, engine, Base
-from .entities.exam import Exam, ExamSchema
+from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, OrdersSchema
 from flask_cors import CORS
 from flask import Flask, jsonify, request
 
@@ -9,26 +9,35 @@ Base.metadata.create_all(engine)
 # start session
 session = Session()
 
+orderss = session.query(Orders).all()
+for o in orderss:
+    print(f'({o.id}) {o.simbol}')
+
 # check for existing data
-exams = session.query(Exam).all()
+# exams = session.query(Exam).all()
+
+# cust = session.query(Customer).all()
+
+# for c in cust:
+#     print(f'({c.id}) {c.firstname}')
 
 app = Flask(__name__)
 CORS(app)
 
-if len(exams) == 0:
-    # create and persist dummy exam
-    python_exam = Exam("SQLAlchemy Exam", "Test your knowledge about SQLAlchemy.", "script")
-    session.add(python_exam)
-    session.commit()
-    session.close()
+# if len(exams) == 0:
+#     # create and persist dummy exam
+#     python_exam = Exam("SQLAlchemy Exam", "Test your knowledge about SQLAlchemy.", "script")
+#     session.add(python_exam)
+#     session.commit()
+#     session.close()
 
-    # reload exams
-    exams = session.query(Exam).all()
+#     # reload exams
+#     exams = session.query(Exam).all()
 
 # show existing exams
-print('### Exams:')
-for exam in exams:
-    print(f'({exam.id}) {exam.title} - {exam.description}')
+# print('### Exams:')
+# for exam in exams:
+#     print(f'({exam.id}) {exam.title} - {exam.description}')
 
 @app.route('/exams')
 def get_exams():
@@ -40,6 +49,17 @@ def get_exams():
 
     session.close()
     return jsonify(exams.data)
+
+@app.route('/customers')
+def get_customers():
+    session = Session()
+    customers_objects = session.query(Customer).all()
+
+    schema = CustomerSchema(many=True)
+    customers = schema.dump(customers_objects)
+
+    session.close()
+    return jsonify(customers.data)
 
 @app.route('/exams', methods=['POST'])
 def add_exam():
