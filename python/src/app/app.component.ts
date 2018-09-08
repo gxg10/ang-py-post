@@ -20,6 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
   examList: Exam[];
   custList: Customer[];
   orderList: Orders[];
+
+  data= ['val1', 'val2', 'val3'];
+  filtered = this.data;
   // test = '
   //   'title': "TypeScript Advanced Exam",
   //   'description': "Tricky questions about TypeScript."
@@ -29,6 +32,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private CustApi: CustomerService,
     private OrdersApi: OrderService) {
 
+  }
+
+  search(val: any) {
+    if (!val) { this.filtered = this.data; }
+    this.filtered = this.data.filter(d =>d.indexOf(val)>=0);
   }
 
   ngOnInit() {

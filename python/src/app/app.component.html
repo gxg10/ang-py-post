@@ -24,3 +24,16 @@
     </li>
   </ul>
 </div>
+<div>
+  <h3>date picker</h3>
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <h2>hello</h2>
+  <input (keyup)="search($event.target.value)" />
+  <div *ngFor="let d of filtered">
+    {{d}}
+  </div>
+</div>
