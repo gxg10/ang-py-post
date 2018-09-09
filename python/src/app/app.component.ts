@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
   examList: Exam[];
   custList: Customer[];
   orderList: Orders[];
-  id = '270072';
+  id = 270168;
   // data = ['val1', 'val2', 'val3'];
   // filtered = this.data;
 
@@ -84,11 +84,12 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log(this.data);
   }
 
-  getOrder(id: string) {
+  getOrder(id) {
     this.OrdersApi.getOrdersById(id)
     .subscribe(
       res => {
         this.orderList = res;
+        console.log(res);
       }
     );
   }
