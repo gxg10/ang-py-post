@@ -13,7 +13,11 @@ export class OrderService{
         return this.http.get<Orders[]>(`${API_URL}/orders`);
     }
 
-    getOrdersById(id: number): Observable<Orders[]> {
-        return this.http.get<Orders[]>(`${API_URL}/orders/${id}`);
+    // getOrdersById(id: number): Observable<Orders[]> {
+    //     return this.http.get<Orders[]>(`${API_URL}/orders/${id}`);
+    // }
+
+    getOrdersByDate(date: string): Observable<Orders[]>{
+        return this.http.get<Orders[]>(`${API_URL}/orders/${date}`);
     }
 }

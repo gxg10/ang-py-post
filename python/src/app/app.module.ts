@@ -10,7 +10,7 @@ import { OrderService } from './orders/orders.service';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule, MatInputModule} from '@angular/material';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -26,7 +26,8 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatNativeDateModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
 
   ],
   providers: [ExamsApiService,

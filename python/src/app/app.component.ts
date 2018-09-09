@@ -8,12 +8,26 @@ import { OrderService } from './orders/orders.service';
 import { Orders } from './orders/orders.model';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
+import {FormControl} from '@angular/forms';
+
+import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
+import { AppDateAdapter, APP_DATE_FORMATS} from './date.adapter';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [
+    {
+      provide: DateAdapter, useClass: AppDateAdapter
+  },
+  {
+      provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS
+  }
+  ]
 })
+
 export class AppComponent implements OnInit, OnDestroy {
   title = 'app';
   examListSubs: Subscription;
@@ -21,12 +35,10 @@ export class AppComponent implements OnInit, OnDestroy {
   examList: Exam[];
   custList: Customer[];
   orderList: Orders[];
-  id = 270168;
   // data = ['val1', 'val2', 'val3'];
   // filtered = this.data;
-
+  event: MatDatepickerInputEvent<Date>;
   data: Date ;
-  events: string[] = [];
 
   constructor(private ExamsApi: ExamsApiService,
     private CustApi: CustomerService,
@@ -49,6 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       console.error
     );
+
   }
 
   ngOnDestroy() {
@@ -81,11 +94,22 @@ export class AppComponent implements OnInit, OnDestroy {
     // this.data = event.value;
     this.data = event.targetElement.value;
     // console.log(event.targetElement.value);
-    console.log(this.data);
+    // console.log(this.data);
   }
 
-  getOrder(id) {
-    this.OrdersApi.getOrdersById(id)
+
+  // getOrder(id) {
+  //   this.OrdersApi.getOrdersById(id)
+  //   .subscribe(
+  //     res => {
+  //       this.orderList = res;
+  //       console.log(res);
+  //     }
+  //   );
+  // }
+
+  getOrdByDate(data) {
+    this.OrdersApi.getOrdersByDate(data)
     .subscribe(
       res => {
         this.orderList = res;
@@ -94,8 +118,14 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
 
-
-  
+  // getdate(newdate) {
+  //   this.OrdersApi.getOrdersByDate(newdate)
+  //   .subscribe(
+  //     res => {
+  //       console.log(res);
+  //     }
+  //   );
+  // }
 
   // postex() {
   //   this.ExamsApi.postExams(this.exam)

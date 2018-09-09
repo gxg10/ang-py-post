@@ -26,15 +26,31 @@
 </div>
 <div>
   <h3>date picker</h3>
+  
+  <h3>get order by id</h3>
+  <button (click)="getOrder(id)">click for order by id</button>
+
+  <h4>test</h4>
+  
   <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+    (dateInput)="addEvent('input',$event)">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <button (click)="getOrdByDate(data)">afiseaza ordinele din data respectiva</button>
+
+</div>
+
+
+<!-- OLD CODE -->
+
+<!-- <mat-form-field>
     <input matInput [matDatepicker]="picker" 
     placeholder="Choose a date" 
     (dateInput)="addEvent('input',$event)">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker ></mat-datepicker>
   </mat-form-field>
-
-  <h3>get order by id</h3>
-  <button (click)="getOrder(id)">click for order by id</button>
-
-</div>
+  <button (click)="getOrdByDate(data)">afiseaza ordinele din data respectiva</button> -->

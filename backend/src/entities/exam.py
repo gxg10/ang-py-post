@@ -44,7 +44,8 @@ class CustomerSchema(Schema):
     updateAt = fields.DateTime()
 
 class Orders(Base):
-    __tablename__='orders'
+    # aici e tabela din postgres
+    __tablename__='orders2'
 
     id = Column(Integer, primary_key=True)
     data = Column(DateTime)
@@ -86,4 +87,3 @@ class OrdersSchema(Schema):
     order_no = fields.Number()
     tip_ordin = fields.Number()
     trader = fields.Str()
-    
