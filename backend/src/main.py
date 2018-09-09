@@ -62,10 +62,11 @@ def get_customers():
     session.close()
     return jsonify(customers.data)
 
-@app.route('/orders')
-def get_orders():
+@app.route('/orders/<ide>')
+def get_orders(ide):
     session = Session()
-    orders_objects = session.query(Orders).all()
+    # orders_objects = session.query(Orders).all()
+    orders_objects = session.query(Orders).filter(Orders.id == ide)
 
     schema = OrdersSchema(many=True)
     orders = schema.dump(orders_objects)

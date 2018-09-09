@@ -6,6 +6,7 @@ import { Customer } from './customers/customer';
 import { CustomerService } from './customers/customers.service';
 import { OrderService } from './orders/orders.service';
 import { Orders } from './orders/orders.model';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 
 @Component({
@@ -20,13 +21,12 @@ export class AppComponent implements OnInit, OnDestroy {
   examList: Exam[];
   custList: Customer[];
   orderList: Orders[];
+  id = '270072';
+  // data = ['val1', 'val2', 'val3'];
+  // filtered = this.data;
 
-  data= ['val1', 'val2', 'val3'];
-  filtered = this.data;
-  // test = '
-  //   'title': "TypeScript Advanced Exam",
-  //   'description': "Tricky questions about TypeScript."
-  // ';
+  data: Date ;
+  events: string[] = [];
 
   constructor(private ExamsApi: ExamsApiService,
     private CustApi: CustomerService,
@@ -34,10 +34,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
 
-  search(val: any) {
-    if (!val) { this.filtered = this.data; }
-    this.filtered = this.data.filter(d =>d.indexOf(val)>=0);
-  }
+  // search(val: any) {
+  //   if (!val) { this.filtered = this.data; }
+  //   this.filtered = this.data.filter(d =>d.indexOf(val)>=0);
+  // }
 
   ngOnInit() {
     this.examListSubs = this.ExamsApi
@@ -49,7 +49,6 @@ export class AppComponent implements OnInit, OnDestroy {
       },
       console.error
     );
-
   }
 
   ngOnDestroy() {
@@ -74,8 +73,26 @@ export class AppComponent implements OnInit, OnDestroy {
         console.log(res);
         this.orderList = res;
       }
-    )
+    );
   }
+
+  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    // this.events.push('${type}:${event.value}');
+    // this.data = event.value;
+    this.data = event.targetElement.value;
+    // console.log(event.targetElement.value);
+    console.log(this.data);
+  }
+
+  getOrder(id: string) {
+    this.OrdersApi.getOrdersById(id)
+    .subscribe(
+      res => {
+        this.orderList = res;
+      }
+    );
+  }
+
 
   
 
