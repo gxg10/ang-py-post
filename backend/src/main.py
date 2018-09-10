@@ -3,6 +3,9 @@ from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, O
 from flask_cors import CORS
 from flask import Flask, jsonify, request
 import simplejson as json
+from sqlalchemy.sql import func
+from datetime import date
+from sqlalchemy import Date, cast, func
 
 # generate database schema
 Base.metadata.create_all(engine)
@@ -66,14 +69,17 @@ def get_customers():
 def get_orders(ide):
     session = Session()
     # orders_objects = session.query(Orders).all()
-    orders_objects = session.query(Orders).filter(Orders.simbol.like(ide + "%"))
-
+    # orders_objects = session.query(Orders).filter(Orders.simbol.ilike(ide+"%")).all()
+    #order_objects = session.query(Orders).filter(func.time(Orders.ef_time).like(ide +"%")).all()
+    orders_objects = session.query(Orders).filter(func.to_char(Orders.ef_time, '%Y-%m-%d').like(ide+"%")).all()
     schema = OrdersSchema(many=True)
     orders = schema.dump(orders_objects)
 
     session.close()
 
+    #return jsonify(orders.data)
     return json.dumps(orders.data)
+
 
 @app.route('/exams', methods=['POST'])
 def add_exam():
