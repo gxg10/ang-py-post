@@ -29,6 +29,7 @@ import { AppDateAdapter, APP_DATE_FORMATS} from './date.adapter';
 })
 
 export class AppComponent implements OnInit, OnDestroy {
+
   title = 'app';
   examListSubs: Subscription;
   custListSubs: Subscription;
@@ -38,12 +39,12 @@ export class AppComponent implements OnInit, OnDestroy {
   // data = ['val1', 'val2', 'val3'];
   // filtered = this.data;
   event: MatDatepickerInputEvent<Date>;
-  data: Date ;
+  data;
 
   constructor(private ExamsApi: ExamsApiService,
     private CustApi: CustomerService,
     private OrdersApi: OrderService) {
-
+  
   }
 
   // search(val: any) {
@@ -90,11 +91,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    // this.events.push('${type}:${event.value}');
-    // this.data = event.value;
-    this.data = event.targetElement.value;
-    // console.log(event.targetElement.value);
-    // console.log(this.data);
+    const date = event.targetElement as HTMLInputElement;
+    // console.log(event.value);
+    this.data = date.value;
+    // this.data = 'AL';
+    console.log(this.data);
   }
 
 

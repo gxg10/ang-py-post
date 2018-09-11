@@ -15,13 +15,13 @@ export class AppDateAdapter extends NativeDateAdapter {
         return isNaN(timestamp) ? null : new Date(timestamp);
       }
    format(date: Date, displayFormat: string): string {
-       if (displayFormat == "input") {
+       if (displayFormat === "input") {
           let day = date.getDate();
           let month = date.getMonth() + 1;
           let year = date.getFullYear();
         //   de aici se modifica template-ul la data: YY-MM-DD
-          return year+ '-' + this._to2digit(month) + '-'+ this._to2digit(day) + '-' ;
-       } else if (displayFormat == "inputMonth") {
+          return year+ '-' + this._to2digit(month) + '-'+ this._to2digit(day);
+       } else if (displayFormat === "inputMonth") {
           let month = date.getMonth() + 1;
           let year = date.getFullYear();
           return  this._to2digit(month) + '/' + year;

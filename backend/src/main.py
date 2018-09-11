@@ -6,6 +6,8 @@ import simplejson as json
 from sqlalchemy.sql import func
 from datetime import date
 from sqlalchemy import Date, cast, func
+import datetime as dt
+import sqlalchemy as sa
 
 # generate database schema
 Base.metadata.create_all(engine)
@@ -67,11 +69,12 @@ def get_customers():
 
 @app.route('/orders/<ide>')
 def get_orders(ide):
+    a = json.dumps(Orders.ef_time, indent=4, sort_keys=True, default=str)
     session = Session()
-    # orders_objects = session.query(Orders).all()
-    # orders_objects = session.query(Orders).filter(Orders.simbol.ilike(ide+"%")).all()
-    #order_objects = session.query(Orders).filter(func.time(Orders.ef_time).like(ide +"%")).all()
-    orders_objects = session.query(Orders).filter(func.to_char(Orders.ef_time, '%Y-%m-%d').like(ide+"%")).all()
+    starttime = dt.datetime.strptime(ide, "%Y-%m-%d")
+    endtime = starttime+dt.timedelta(days=1)
+    condition = sa.and_(Orders.ef_time>=starttime, Orders.ef_time<endtime)
+    orders_objects = session.query(Orders).filter(condition).all()
     schema = OrdersSchema(many=True)
     orders = schema.dump(orders_objects)
 
