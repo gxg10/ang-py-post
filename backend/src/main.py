@@ -1,49 +1,66 @@
 from .entities.entity import Session, engine, Base
-from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, OrdersSchema
+from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, OrdersSchema, Test, TestSchema
 from flask_cors import CORS
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, flash, redirect, url_for
+from werkzeug.utils import secure_filename
 import simplejson as json
-from sqlalchemy.sql import func
+from sqlalchemy.sql import select
 from datetime import date
-from sqlalchemy import Date, cast, func
+from sqlalchemy import Date
 import datetime as dt
 import sqlalchemy as sa
+import os
+from flask import send_from_directory
+
 
 # generate database schema
 Base.metadata.create_all(engine)
 
+UPLOAD_FOLDER = '/tmp/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 # start session
 session = Session()
 
-# orderss = session.query(Orders).all()
-# for o in orderss:
-#     print(f'({o.id}) {o.simbol}')
-
-# check for existing data
-# exams = session.query(Exam).all()
-
-# cust = session.query(Customer).all()
-
-# for c in cust:
-#     print(f'({c.id}) {c.firstname}')
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 
-# if len(exams) == 0:
-#     # create and persist dummy exam
-#     python_exam = Exam("SQLAlchemy Exam", "Test your knowledge about SQLAlchemy.", "script")
-#     session.add(python_exam)
-#     session.commit()
-#     session.close()
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#     # reload exams
-#     exams = session.query(Exam).all()
-
-# show existing exams
-# print('### Exams:')
-# for exam in exams:
-#     print(f'({exam.id}) {exam.title} - {exam.description}')
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file', filename=filename))
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+    '''
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 @app.route('/exams')
 def get_exams():
@@ -66,6 +83,23 @@ def get_customers():
 
     session.close()
     return jsonify(customers.data)
+
+@app.route('/test')
+def get_tests():
+    session = Session()
+    test_objects = session.query()
+
+
+    return jsonify('am realizat')
+
+    # session = Session()
+    # test_objects = session.query(Test).filter(Test.id=='2').all()
+
+    # schema = TestSchema(many=True)
+    # tests = schema.dump(test_objects)
+
+    # session.close()
+    # return jsonify(tests.data)
 
 @app.route('/orders/<ide>')
 def get_orders(ide):

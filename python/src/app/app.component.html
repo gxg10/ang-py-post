@@ -1,23 +1,5 @@
-<h2> here are the exams created</h2>
-<ul>
-  <li *ngFor="let exam of examList">
-    {{exam.title}}
-  </li>
-</ul>
-
 <div>
-  <h3>customers</h3>
-  <button (click)="getC()">push for customers</button>
-  <ul>
-    <li *ngFor="let c of custList">
-      {{c.firstname}} {{c.lastname}} {{c.age}} {{c.createdAt}} {{c.updatedAt}}
-    </li>
-  </ul>
-</div>
-
-<div>
-  <h3>Orders aici</h3>
-  <button (click)="getOr()">Push for orders</button>
+  <h3>Registru ordine</h3>
   <ul>
     <li *ngFor="let o of orderList">
       {{o.simbol}}
@@ -26,11 +8,6 @@
 </div>
 <div>
   <h3>date picker</h3>
-  
-  <h3>get order by id</h3>
-  <button (click)="getOrder(id)">click for order by id</button>
-
-  <h4>test</h4>
   
   <mat-form-field>
     <input matInput [matDatepicker]="picker" placeholder="Choose a date"
@@ -45,7 +22,26 @@
 
 
 <!-- OLD CODE -->
-<!-- (dateInput)="addEvent('input',$event)" -->
+
+<!-- exams
+<h2> here are the exams created</h2>
+<ul>
+  <li *ngFor="let exam of examList">
+    {{exam.title}}
+  </li>
+</ul> -->
+
+<!-- customer
+<div>
+  <h3>customers</h3>
+  <button (click)="getC()">push for customers</button>
+  <ul>
+    <li *ngFor="let c of custList">
+      {{c.firstname}} {{c.lastname}} {{c.age}} {{c.createdAt}} {{c.updatedAt}}
+    </li>
+  </ul>
+</div> -->
+
 
 <!-- <mat-form-field>
     <input matInput [matDatepicker]="picker" 

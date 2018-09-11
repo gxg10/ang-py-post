@@ -43,6 +43,21 @@ class CustomerSchema(Schema):
     createdAt = fields.DateTime()
     updateAt = fields.DateTime()
 
+class Test(Base):
+    __tablename__="ordtest"
+    nume = Column(String)
+    tara = Column(String)
+    id = Column(Integer, primary_key=True)
+    def __init__(self, nume, tara, id):
+        self.nume = nume
+        self.tara = tara
+        self.id = id
+
+class TestSchema(Schema):
+    nume = fields.Str()
+    tara = fields.Str()
+    id = fields.Integer()
+
 class Orders(Base):
     __tablename__='ord7'
 
