@@ -19,6 +19,18 @@
   <button (click)="getOrdByDate(data)">afiseaza ordinele din data respectiva</button>
 
 </div>
+<div>
+  <h1>Upload new File</h1>
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="file">
+    </form>
+
+    <button type="button" class="btn btn-success btn-s" 
+      (click)="upload()" [disabled]="!filestoUpload">
+      Upload
+      </button>
+      
+</div>
 
 
 <!-- OLD CODE -->

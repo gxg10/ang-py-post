@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import {Subscription} from 'rxjs/';
 import {ExamsApiService} from './exam/exam-api.service';
 import {Exam} from './exam/exam.model';
@@ -12,6 +12,11 @@ import {FormControl} from '@angular/forms';
 
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 import { AppDateAdapter, APP_DATE_FORMATS} from './date.adapter';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+
+
+const URL = 'http://127.0.0.1:5000/txtupload';
 
 
 @Component({
@@ -41,10 +46,14 @@ export class AppComponent implements OnInit, OnDestroy {
   event: MatDatepickerInputEvent<Date>;
   data;
 
+  filestoUpload: Array<File> = [];
+
   constructor(private ExamsApi: ExamsApiService,
     private CustApi: CustomerService,
-    private OrdersApi: OrderService) {
-  
+    private OrdersApi: OrderService,
+    private el: ElementRef,
+    private http: HttpClient) {
+
   }
 
   // search(val: any) {
@@ -118,6 +127,31 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  upload() {
+    // locate the file element meant for the file upload.
+        const inputEl: HTMLInputElement = this.el.nativeElement.querySelector('#photo');
+        const files: Array<File> = this.filestoUpload;
+        console.log(files);
+    // get the total amount of files attached to the file input.
+        const fileCount: number = inputEl.files.length;
+    // create a new fromdata instance
+        const formData = new FormData();
+    // check if the filecount is greater than zero, to be sure a file was selected.
+        if (fileCount > 0) { // a file was selected
+            // append the key name 'photo' with the first file in the element
+            for (let i = 0; i < fileCount; i++) {
+                formData.append('txtFileFilter', inputEl.files.item(i));
+            }
+            // call the angular http method
+            this.http
+                .post(URL, formData).pipe(map((res:any) => res)).subscribe(
+                 (res) => {
+                     return console.log('files', res);
+                 });
+            this.filestoUpload = undefined;
+          }
+       }
 
   // getdate(newdate) {
   //   this.OrdersApi.getOrdersByDate(newdate)

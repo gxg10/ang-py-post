@@ -80,11 +80,11 @@ def read():
         if conn is not None:
             conn.close()
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/txtupload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
+        if 'txtFileFilter' not in request.files:
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
@@ -99,15 +99,16 @@ def upload_file():
             read()
             return "upload reusit"
             #return redirect(url_for('uploaded_file', filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+    # return'''
+    # <!doctype html>
+    # <title>Upload new File</title>
+    # <h1>Upload new File</h1>
+    # <form method=post enctype=multipart/form-data>
+    #   <input type=file name=file>
+    #   <input type=submit value=Upload>
+    # </form>
+    # '''
+    
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],

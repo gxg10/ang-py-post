@@ -59,7 +59,7 @@ class TestSchema(Schema):
     id = fields.Integer()
 
 class Orders(Base):
-    __tablename__='ord7'
+    __tablename__='ord8'
 
     id = Column(Integer, primary_key=True)
     status = Column(Integer)
@@ -76,10 +76,10 @@ class Orders(Base):
     update_type = Column(Integer)
     update_time = Column(DateTime)
     trader = Column(String)
-    internal_account = Column(Numeric)
+    iacc = Column(Numeric)
     cant_exec = Column(Numeric)
     order_status = Column(Integer)
-    def __init__(self, status, order_no, simbol, simbol_type, market, ef_time, side, price, volum, order_term, ticket, update_type, update_time,trader, internal_account, cant_exec, order_status):
+    def __init__(self, status, order_no, simbol, simbol_type, market, ef_time, side, price, volum, order_term, ticket, update_type, update_time,trader, iacc, cant_exec, order_status):
         self.status = status
         self.order_no = order_no
         self.simbol = simbol
@@ -94,7 +94,7 @@ class Orders(Base):
         self.update_type = update_type
         self.update_time = update_time
         self.trader = trader
-        self.internal_account = internal_account
+        self.iacc = iacc
         self.cant_exec = cant_exec
         self.order_status = order_status
 
@@ -114,7 +114,7 @@ class OrdersSchema(Schema):
     update_type = fields.Number()
     update_time = fields.DateTime()
     trader = fields.Str()
-    internal_account = fields.Number()
+    iacc = fields.Number()
     cant_exec = fields.Number()
     order_status = fields.Number()
 
