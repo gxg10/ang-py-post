@@ -1,7 +1,7 @@
 from .entities.entity import Session, engine, Base
 from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, OrdersSchema, Test, TestSchema
 from flask_cors import CORS
-from flask import Flask, jsonify, request, flash, redirect, url_for
+from flask import Flask, jsonify, request, flash, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import simplejson as json
 from sqlalchemy.sql import select
@@ -10,26 +10,75 @@ from sqlalchemy import Date
 import datetime as dt
 import sqlalchemy as sa
 import os
-from flask import send_from_directory
-
+import psycopg2
+import csv
+from configparser import ConfigParser
 
 # generate database schema
 Base.metadata.create_all(engine)
 
-UPLOAD_FOLDER = '/tmp/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 # start session
 session = Session()
+
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'database.ini')
+UPLOAD_FOLDER = './path/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 
+def config(filename=CONFIG_PATH, section='postgresql'):
+
+    parser = ConfigParser()
+    parser.read(filename)
+
+    db = {}
+    if parser.has_section(section):
+        params = parser.items(section)
+        for param in params:
+            db[param[0]] = param[1]
+    else:
+        raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+ 
+    return db
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def read():
+    with open('./path/ord10.txt','r') as f:
+        reader = csv.reader(f, delimiter='\t')
+        next(reader, None)
+        ordine_noi = []
+        ordine_modif = []
+        included = [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 20, 34, 35, 36, 43, 46, 49]
+        content = []
+        for row in reader:
+            if row[34] == '1':
+                content = list(row[i] for i in included)
+                ordine_noi.append(tuple(content))
+            elif row[34] == '2':
+                content = list(row[i] for i in included)
+                ordine_modif.append(tuple(content))
+    sql = """INSERT INTO ord8(status, order_no, simbol, simbol_type, market, ef_time, side, price, volum, order_term, ticket, update_type, update_time, trader, iacc, cant_exec, order_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    conn = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        # cur.execute(sql, customer)
+        cur.executemany(sql, ordine_noi)
+        conn.commit()
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -47,7 +96,9 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+            read()
+            return "upload reusit"
+            #return redirect(url_for('uploaded_file', filename=filename))
     return '''
     <!doctype html>
     <title>Upload new File</title>
