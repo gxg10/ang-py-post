@@ -50,7 +50,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def read():
-    with open('./path/ord10.txt','r') as f:
+    with open('./path/ord.txt','r') as f:
         reader = csv.reader(f, delimiter='\t')
         next(reader, None)
         ordine_noi = []
@@ -98,16 +98,7 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             read()
             return jsonify("upload reusit")
-            #return redirect(url_for('uploaded_file', filename=filename))
-    # return'''
-    # <!doctype html>
-    # <title>Upload new File</title>
-    # <h1>Upload new File</h1>
-    # <form method=post enctype=multipart/form-data>
-    #   <input type=file name=txtFileFilter>
-    #   <input type=submit value=Upload>
-    # </form>
-    # '''
+
     
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

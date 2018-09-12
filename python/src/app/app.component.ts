@@ -47,6 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
   data;
 
   filestoUpload: Array<File> = [];
+  mesaj_upload;
 
   constructor(private ExamsApi: ExamsApiService,
     private CustApi: CustomerService,
@@ -147,7 +148,8 @@ export class AppComponent implements OnInit, OnDestroy {
             this.http
                 .post(URL, formData).pipe(map((res:any) => res)).subscribe(
                  (res) => {
-                     return console.log('files', res);
+                    this.mesaj_upload = res;
+                    return console.log('files', res);
                  });
             this.filestoUpload = undefined;
           }

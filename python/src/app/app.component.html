@@ -1,11 +1,4 @@
-<div>
-  <h3>Registru ordine</h3>
-  <ul>
-    <li *ngFor="let o of orderList">
-      {{o.simbol}}
-    </li>
-  </ul>
-</div>
+
 <div>
   <h3>date picker</h3>
   
@@ -20,6 +13,14 @@
 
 </div>
 <div>
+  <h3>Registru ordine</h3>
+  <ul>
+    <li *ngFor="let o of orderList">
+    {{o.data}} {{o.simbol}} {{o.internal_account}} {{o.volum}}
+    </li>
+  </ul>
+</div>
+<div>
   <h1>Upload new File</h1>
     <form method="post" enctype="multipart/form-data">
       <input type="file" name="txtFileFilter" id="photo">
@@ -29,6 +30,7 @@
       (click)="upload()" [disabled]="!filestoUpload">
       Upload
       </button>
+      <p>{{mesaj_upload}}</p>
       
 </div>
 
