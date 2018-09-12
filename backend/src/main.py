@@ -64,7 +64,7 @@ def read():
             elif row[34] == '2':
                 content = list(row[i] for i in included)
                 ordine_modif.append(tuple(content))
-    sql = """INSERT INTO ord8(status, order_no, simbol, simbol_type, market, ef_time, side, price, volum, order_term, ticket, update_type, update_time, trader, iacc, cant_exec, order_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    sql = """INSERT INTO ord8(status, order_no, simbol, simbol_type, market, ef_time, side, price, volum, order_term, ticket, update_type, update_time, trader, internal_account, cant_exec, order_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     conn = None
     try:
         params = config()
@@ -87,7 +87,7 @@ def upload_file():
         if 'txtFileFilter' not in request.files:
             flash('No file part')
             return redirect(request.url)
-        file = request.files['file']
+        file = request.files['txtFileFilter']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
@@ -97,14 +97,14 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             read()
-            return "upload reusit"
+            return jsonify("upload reusit")
             #return redirect(url_for('uploaded_file', filename=filename))
     # return'''
     # <!doctype html>
     # <title>Upload new File</title>
     # <h1>Upload new File</h1>
     # <form method=post enctype=multipart/form-data>
-    #   <input type=file name=file>
+    #   <input type=file name=txtFileFilter>
     #   <input type=submit value=Upload>
     # </form>
     # '''
