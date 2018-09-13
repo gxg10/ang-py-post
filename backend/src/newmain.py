@@ -1,12 +1,12 @@
 from .entities.entity import Session, engine, Base
-from .entities.exam import Exam, ExamSchema, Customer, CustomerSchema, Orders, OrdersSchema, Test, TestSchema
+from .entities.orders import Orders, OrdersSchema
 from flask_cors import CORS
 from flask import Flask, jsonify, request, flash, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 import simplejson as json
 from sqlalchemy.sql import select
 from datetime import date
-from sqlalchemy import Date
+from sqlalchemy import Date, text
 import datetime as dt
 import sqlalchemy as sa
 import os
@@ -14,17 +14,11 @@ import psycopg2
 import csv
 from configparser import ConfigParser
 
-# generate database schema
 Base.metadata.create_all(engine)
-
-
-# start session
-# session = Session()
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'database.ini')
 UPLOAD_FOLDER = './path/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -44,6 +38,19 @@ def config(filename=CONFIG_PATH, section='postgresql'):
         raise Exception('Section {0} not found in the {1} file'.format(section, filename))
  
     return db
+
+@app.route('/')
+def index():
+    session = Session()
+    order_objects = session.query(Orders).from_statement(
+        text("SELECT * FROM ord7 where simbol=:name")
+    ).params(name="ALR").all()
+    schema = OrdersSchema(many=True)
+    orders = schema.dump(order_objects)
+
+    session.close()
+
+    return jsonify(orders.data)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -99,50 +106,10 @@ def upload_file():
             read()
             return jsonify("upload reusit")
 
-    
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
-
-@app.route('/exams')
-def get_exams():
-    session = Session()
-    exam_objects = session.query(Exam).all()
-
-    schema = ExamSchema(many=True)
-    exams = schema.dump(exam_objects)
-
-    session.close()
-    return jsonify(exams.data)
-
-@app.route('/customers')
-def get_customers():
-    session = Session()
-    customers_objects = session.query(Customer).all()
-
-    schema = CustomerSchema(many=True)
-    customers = schema.dump(customers_objects)
-
-    session.close()
-    return jsonify(customers.data)
-
-@app.route('/test')
-def get_tests():
-    session = Session()
-    test_objects = session.query()
-
-
-    return jsonify('am realizat')
-
-    # session = Session()
-    # test_objects = session.query(Test).filter(Test.id=='2').all()
-
-    # schema = TestSchema(many=True)
-    # tests = schema.dump(test_objects)
-
-    # session.close()
-    # return jsonify(tests.data)
 
 @app.route('/orders/<ide>')
 def get_orders(ide):
@@ -159,22 +126,3 @@ def get_orders(ide):
 
     #return jsonify(orders.data)
     return json.dumps(orders.data)
-
-
-@app.route('/exams', methods=['POST'])
-def add_exam():
-    # mount exam object
-    posted_exam = ExamSchema(only=('title', 'description'))\
-        .load(request.get_json())
-
-    exam = Exam(**posted_exam.data, created_by="HTTP post request")
-
-    # persist exam
-    session = Session()
-    session.add(exam)
-    session.commit()
-
-    # return created exam
-    new_exam = ExamSchema().dump(exam).data
-    session.close()
-    return jsonify(new_exam), 201
