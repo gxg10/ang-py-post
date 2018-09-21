@@ -12,13 +12,22 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule, MatInputModule} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AboutComponent } from './about/about.component';
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
+import { ContactComponent } from './contact/contact.component';
+import { AppRoutingModule } from './router-module';
+import { AuthService } from './auth-service';
+import { AuthGuard } from './auth-guard';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    AboutComponent
+    AboutComponent,
+    HeaderComponent,
+    HomeComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,
@@ -29,12 +38,12 @@ import { AboutComponent } from './about/about.component';
     MatNativeDateModule,
     MatInputModule,
     FormsModule,
-    ReactiveFormsModule
-
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [ExamsApiService,
   CustomerService,
-OrderService],
+OrderService, AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
