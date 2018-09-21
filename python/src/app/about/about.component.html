@@ -1,0 +1,34 @@
+<p>
+  about works!
+</p>
+<button (click)="status = !status">push to hide</button>
+<!-- <p *ngIf="status"> -->
+<p [hidden]="status">
+
+  {{setup}}
+</p>
+<h1>Name {{person.name}}</h1>
+<button (click)="person = male" [disabled]="person.sex=='m'">Male</button>
+<button (click)="person = female" [disabled]="person.sex=='f'">Female</button>
+
+<p><img [src]="person.photo" [title]="person.name" class="photo"></p>
+<p [hidden]="!person.rating">
+  Rating: <span>{{person.rating}}</span>
+</p>
+
+<h1>Expressions</h1>
+<input #count type="number" value="4" (input)="star = count.value > 5">
+<p [hidden]="!count.valueAsNumber">Rat
+  <span [title]="rating(count.value) + (star ? ' Youre a star!' : '')"
+  [innerHTML]="symbol.repeat(count.value)"></span>
+</p>
+
+<h2>teste</h2>
+<h4 [innerHTML]='full'></h4>
+<h3>test2</h3>
+<h4 [innerHTML]='cite'></h4>
+<img [src]='imagepath'/>
+<h2>test 3</h2>
+<p>Enter the value: </p>
+<input [(ngModel)]='data1'>
+Entered value: Hi {{data1}}
